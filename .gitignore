@@ -1,25 +1,42 @@
-# Logs
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Frontend
+node_modules/
+.pnpm-store/
+dist/
+dist-ssr/
+coverage/
+*.tsbuildinfo
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Build and runtime
+build/
+.cache/
+tmp/
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
+# Editors and OS
 .DS_Store
-dist
-dist-ssr
-coverage
-*.local
-
-# Editor directories and files
+Thumbs.db
+.idea/
 .vscode/*
 !.vscode/extensions.json
-.idea
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-.env
+*.swp
+
+# Local databases and backups
+*.sqlite3
+*.db
+*.bak
+backups/

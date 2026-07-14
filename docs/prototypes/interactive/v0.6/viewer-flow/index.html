@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>All-Round-TV V2 · 原型 v0.4</title>
+  <link rel="stylesheet" href="prototype.css" />
+</head>
+<body>
+  <div class="lab-bar">
+    <strong>ARTV LAB / v0.6</strong>
+    <span id="labState">发现</span>
+    <div class="lab-actions">
+      <button id="demoAd" class="hidden" data-action="enter-ad">进入已标记广告段</button>
+      <button id="demoError" class="hidden" data-action="fail-playback">触发播放异常</button>
+      <button data-action="reset">重置体验</button>
+    </div>
+  </div>
+
+  <div class="shell">
+    <header class="topbar">
+      <button class="logo" data-screen="home"><i>AR</i><span>All-Round TV</span></button>
+      <nav>
+        <button data-screen="home" class="active">发现</button>
+        <button data-screen="favorites">片单</button>
+        <button data-screen="history">足迹</button>
+      </nav>
+      <button class="search-icon" data-action="toggle-search" aria-label="打开搜索" aria-expanded="false">⌕</button>
+      <button class="avatar">北</button>
+    </header>
+    <dialog class="quick-search" id="quickSearch" aria-labelledby="quickSearchTitle">
+      <div class="quick-search-card">
+        <div class="quick-search-heading"><div><span class="kicker">GLOBAL SEARCH</span><h2 id="quickSearchTitle">搜索影视内容</h2></div><button type="button" class="close-search" data-action="close-search" aria-label="关闭搜索">×</button></div>
+        <form id="quickSearchForm">
+          <span>⌕</span><input id="quickQuery" placeholder="搜索电影、剧集或演员" autocomplete="off" maxlength="100" />
+          <button class="primary">搜索</button>
+        </form>
+        <div class="search-suggestions"><small>最近搜索</small><button type="button" data-search-value="漫游星海">漫游星海</button><button type="button" data-search-value="科幻冒险">科幻冒险</button><button type="button" data-search-value="2026 热播">2026 热播</button></div>
+        <div class="search-tip"><span>/</span> 随时打开搜索 <i>·</i> <span>Esc</span> 关闭</div>
+      </div>
+    </dialog>
+
+    <main>
+      <section class="screen active" data-screen-id="home">
+        <div class="home-hero">
+          <div class="hero-art"><span>ORBITAL<br />SIGNAL</span><i></i></div>
+          <div class="hero-info">
+            <span class="kicker">继续观看 · 科幻冒险</span>
+            <h1>漫游星海</h1>
+            <p>深空勘探队在失联航道中发现未知信标，返航计划由此彻底改变。</p>
+            <div class="progress-copy"><b>第 3 集</b><span>18:42 / 44:10</span></div>
+            <div class="hero-progress"><i></i></div>
+            <div class="actions"><button class="primary" data-action="resume-play">▶ 继续播放</button><button class="ghost" data-action="open-detail">查看详情</button></div>
+          </div>
+        </div>
+
+        <div class="rail-title"><div><small>BASED ON YOUR TASTE</small><h2>为你推荐</h2></div><button>查看全部 →</button></div>
+        <div class="poster-rail" id="homeGrid"></div>
+        <div class="rail-title"><div><small>TRENDING SERIES</small><h2>本周热播</h2></div><button>换一批 ↻</button></div>
+        <div class="wide-rail" id="wideGrid"></div>
+      </section>
+
+      <section class="screen" data-screen-id="search">
+        <div class="search-heading"><span class="kicker">5 个来源已启用</span><h1>找到下一部想看的</h1></div>
+        <form class="search-form" id="searchForm"><input id="query" value="漫游星海" maxlength="100" aria-label="搜索影视" /><button class="primary">搜索</button></form>
+        <div class="filters"><button class="active">全部</button><button>电影</button><button>剧集</button><button>年份⌄</button><button>来源⌄</button></div>
+        <div class="loading hidden" id="searchLoading"><i></i><span>正在聚合已启用来源</span></div>
+        <div class="source-report hidden" id="sourceSummary"><div><b>6 个匹配结果</b><span>4 个来源成功 · 1 个超时</span></div><button data-action="toggle-sources">查看来源状态</button></div>
+        <div class="source-details hidden" id="sourcePanel"><span>流光影视 <b>成功</b></span><span>白鲸资源 <b>成功</b></span><span>远山影视 <b class="warn">超时</b></span></div>
+        <div class="search-grid hidden" id="searchResults"></div>
+      </section>
+
+      <section class="screen" data-screen-id="detail">
+        <button class="back" data-screen="search">← 返回</button>
+        <div class="detail-cover">
+          <div class="detail-poster">M</div>
+          <div class="detail-info"><span class="kicker">SERIES / 2026</span><h1>漫游星海</h1><p class="meta">科幻 · 冒险 · 中国 · 12 集</p><p>一支深空勘探队在失联航道中发现未知信标，并被迫重新理解回家的含义。</p><div class="actions"><button class="primary" data-action="play">▶ 从 18:42 继续</button><button class="ghost">＋ 加入片单</button></div></div>
+          <div class="score"><small>综合评分</small><strong>8.7</strong><span>豆瓣 / TMDB</span></div>
+        </div>
+        <div class="chooser">
+          <div class="episode-pane"><div class="pane-title"><h2>选择剧集</h2><button>正序 ⇅</button></div><div class="episodes" id="episodes"></div></div>
+          <aside class="source-pane"><div class="pane-title"><h2>播放来源</h2><span>3 个可用</span></div><div id="sourceOptions"></div></aside>
+        </div>
+        <div class="play-dock"><div><small>当前播放组合</small><strong id="currentSelection">流光影视 · 第 3 集</strong></div><span>从 18:42 继续</span><button class="primary" data-action="play">开始播放 →</button></div>
+      </section>
+
+      <section class="screen watch-screen" data-screen-id="player">
+        <div class="watch-head"><button class="back" data-screen="detail">← 返回详情</button><div><b>漫游星海</b><span id="playingMeta">第 3 集 · 流光影视</span></div><button class="ghost">选集</button></div>
+        <div class="watch-layout">
+          <div class="player-column">
+            <div class="video-stage">
+              <div class="space"><i></i><i></i><i></i></div>
+              <div class="center-play" id="playbackReady"><button aria-label="播放">▶</button><span>正在播放 · 第 3 集</span></div>
+              <div class="player-error hidden" id="playerError"><em>!</em><h2>当前来源无法继续播放</h2><p>媒体清单读取超时，已保留第 3 集 18:42 的进度。</p><div class="actions"><button class="ghost" data-action="retry">重试当前来源</button><button class="primary" data-action="choose-source">换一个来源</button></div><small>错误阶段：媒体清单 · DEMO-2048</small></div>
+              <div class="connecting hidden" id="sessionLoading"><i></i><b>正在连接白鲸资源</b><span>第 3 集 · 从 18:42 继续</span></div>
+              <div class="ad-skip hidden" id="adSkip"><div><small>检测到广告区段</small><b>00:16 后返回正片</b></div><button class="primary" data-action="skip-ad">跳过广告 →</button></div>
+              <div class="undo-skip hidden" id="undoSkip"><span>已跳过 34 秒广告</span><button data-action="undo-skip">撤销并返回</button></div>
+            </div>
+            <div class="controls"><button>▶</button><span id="currentTime">18:42</span><div class="timeline"><i></i><em class="ad-marker" title="已确认广告区段"></em></div><span>44:10</span><button>1.0×</button><button>⛶</button></div>
+            <div class="playback-tools">
+              <div><button class="tool" id="markStart" data-action="mark-start">⚑ 标记广告开始</button><button class="tool hidden" id="markEnd" data-action="mark-end">■ 标记广告结束</button><span id="markHint">已登录用户可提交广告标记</span></div>
+              <label class="auto-skip"><span><b>可信广告自动跳过</b><small>仅高置信度区段，可撤销</small></span><input id="autoSkip" type="checkbox" /><i></i></label>
+            </div>
+            <section class="player-episodes">
+              <div class="player-episodes-head"><div><span class="kicker">EPISODES</span><h2>从配置来源选择剧集</h2></div><span id="episodeSourceStatus">流光影视 · 线路 1 · 12 集</span></div>
+              <div class="player-source-tabs" id="playerSourceTabs">
+                <button class="active" data-player-source="流光影视" data-line="线路 1" data-count="12">流光影视 <small>健康</small></button>
+                <button data-player-source="白鲸资源" data-line="线路 2" data-count="10">白鲸资源 <small>健康</small></button>
+                <button data-player-source="远山影视" data-line="线路 1" data-count="8">远山影视 <small>降级</small></button>
+              </div>
+              <div class="player-episode-grid" id="playerEpisodeGrid"></div>
+              <p class="episode-note">切换来源或剧集会创建新的安全播放会话；系统会尝试沿用相同标准剧集的观看进度。</p>
+            </section>
+          </div>
+          <aside class="related-pane">
+            <div class="related-head"><span class="kicker">UP NEXT</span><h2>同类推荐</h2><p>根据“科幻 · 冒险”推荐</p></div>
+            <div id="relatedList"></div>
+            <button class="more-related">查看全部同类影视 →</button>
+          </aside>
+        </div>
+      </section>
+
+      <section class="screen empty" data-screen-id="favorites"><h1>我的片单</h1><p>本轮原型聚焦发现、播放、推荐与广告追踪。</p></section>
+      <section class="screen empty" data-screen-id="history"><h1>观看足迹</h1><p>本轮原型聚焦发现、播放、推荐与广告追踪。</p></section>
+    </main>
+  </div>
+
+  <dialog id="sourceDialog"><form method="dialog" class="dialog-card"><button class="x" value="cancel">×</button><span class="kicker">MANUAL SWITCH</span><h2>选择新的播放来源</h2><div class="resume-note"><span>保留进度</span><b>第 3 集 · 18:42</b></div><p>系统不会自动切换。确认后将创建新的安全播放会话。</p><label class="candidate selected"><input type="radio" name="source" checked /><span><b>白鲸资源</b><small>健康 · 精确匹配第 3 集</small></span><em>推荐</em></label><label class="candidate"><input type="radio" name="source" /><span><b>北辰影视</b><small>降级 · “第三话”需确认</small></span></label><div class="dialog-actions"><button class="ghost" value="cancel">取消</button><button class="primary" value="confirm" data-action="confirm-source">确认切换</button></div></form></dialog>
+
+  <dialog id="markerDialog"><form method="dialog" class="dialog-card"><button class="x" value="cancel">×</button><span class="kicker">REGISTERED USER MARKER</span><h2>确认广告时间段</h2><div class="member-note"><i>北</i><span><b>已登录注册用户</b><small>标记将记录到你的账户并保留审计来源</small></span></div><p>标记只绑定当前来源、剧集和媒体版本。提交后先对你本人有效。</p><div class="time-range"><label>开始<input value="18:42" /></label><span>→</span><label>结束<input value="19:16" /></label><b>34 秒</b></div><label class="marker-type">区段类型<select><option>源内广告</option><option>疑似广告</option><option>片头（不作为广告）</option></select></label><div class="dialog-actions"><button class="ghost" value="cancel">取消</button><button class="primary" value="confirm" data-action="confirm-marker">保存到我的标记</button></div></form></dialog>
+
+  <div class="toast hidden" id="toast" role="status"></div>
+  <div class="sr-only" id="live" aria-live="polite"></div>
+  <script src="prototype.js"></script>
+</body>
+</html>
